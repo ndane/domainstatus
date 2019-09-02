@@ -1,7 +1,7 @@
 package main
 
-import nats
+import "github.com/ndane/domainstatus/internal/nats"
 
 func main() {
-	nats.Connect()
+	nats.Connect("localhost:4222")
 }
