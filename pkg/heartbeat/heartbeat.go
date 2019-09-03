@@ -15,8 +15,8 @@ import (
 var stop chan bool
 
 // ConnectAndStart - Connects to the NATS server and starts broadcasting a heartbeat
-func ConnectAndStart(serviceName, servers string) {
-	connection, err := nats.Connect(servers)
+func ConnectAndStart(serviceName string, servers []string) {
+	connection, err := nats.Connect(strings.Join(servers, ","))
 	if err != nil {
 		log.WithError(err).Panic("Failed to connect to NATS")
 	}
