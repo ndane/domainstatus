@@ -21,14 +21,15 @@ func ConnectAndStart(serviceName string, servers []string) {
 		log.WithError(err).Panic("Failed to connect to NATS")
 	}
 
-	hbCount := 0
-	posthb(&hbCount, serviceName, connection)
+	hbCount := 1
+	posthb(hbCount, serviceName, connection)
 	ticker := time.NewTicker(2 * time.Minute)
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
-				posthb(&hbCount, serviceName, connection)
+				hbCount++
+				posthb(hbCount, serviceName, connection)
 			case <-stop:
 				return
 			}
@@ -41,7 +42,7 @@ func Stop() {
 	stop <- true
 }
 
-func posthb(counter *int, service string, conn *nats.Conn) {
+func posthb(msgid int, service string, conn *nats.Conn) {
 	vmem, err := mem.VirtualMemory()
 	if err != nil {
 		log.WithError(err).Panic()
@@ -51,11 +52,10 @@ func posthb(counter *int, service string, conn *nats.Conn) {
 		log.WithError(err).Panic()
 	}
 
-	*counter = *counter + 1
 	subject := strings.Join([]string{
 		messages.HeartbeatSubjectDomain,
 		service,
-		string(*counter),
+		string(msgid),
 	}, ".")
 
 	message := &messages.Heartbeat{
