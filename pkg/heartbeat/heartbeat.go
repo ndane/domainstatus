@@ -52,10 +52,15 @@ func posthb(msgid int, service string, conn *nats.Conn) {
 	if err != nil {
 		log.WithError(err).Panic()
 	}
+	clientID, err := conn.GetClientID()
+	if err != nil {
+		log.WithError(err).Panic()
+	}
 
 	subject := strings.Join([]string{
 		messages.HeartbeatSubjectDomain,
 		service,
+		strconv.FormatUint(clientID, 10),
 		strconv.Itoa(msgid),
 	}, ".")
 
