@@ -1,14 +1,19 @@
 package messages
 
-// MessageType - Denotes the type of message
-type MessageType uint
-
 const (
-	// HeartbeatMessage - Hearbeat message
-	HeartbeatMessage MessageType = iota
+	// HeartbeatSubjectDomain - Hearbeat message subject
+	HeartbeatSubjectDomain = "hb"
 )
 
 // Heartbeat - Message received from a hearbeat
 type Heartbeat struct {
-	Address string
+	Address     string `json:"addr"`
+	ServiceType string `json:"svc"`
+	AverageLoad struct {
+		// CPUPercentage - Average cpu load
+		CPUPercentage float32 `json:"cpu"`
+
+		// MemUsage - Current memory usage in %
+		MemoryUsage float32 `json:"mem"`
+	} `json:"load"`
 }

@@ -1,7 +1,14 @@
 package main
 
-import "github.com/ndane/domainstatus/internal/nats"
+import (
+	"sync"
+
+	"github.com/ndane/domainstatus/pkg/heartbeat"
+)
 
 func main() {
-	nats.Connect("localhost:4222")
+	heartbeat.ConnectAndStart("domainstatus", "localhost:4222")
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	wg.Wait()
 }
