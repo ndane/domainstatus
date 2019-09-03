@@ -32,6 +32,7 @@ func ConnectAndStart(serviceName string, servers []string) {
 				hbCount++
 				posthb(hbCount, serviceName, connection)
 			case <-stop:
+				connection.Close()
 				return
 			}
 		}
