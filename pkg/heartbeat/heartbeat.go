@@ -55,7 +55,7 @@ func posthb(msgid int, service string, conn *nats.Conn) {
 	subject := strings.Join([]string{
 		messages.HeartbeatSubjectDomain,
 		service,
-		string(msgid),
+		string(1),
 	}, ".")
 
 	message := &messages.Heartbeat{
