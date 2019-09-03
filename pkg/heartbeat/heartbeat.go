@@ -2,6 +2,7 @@ package heartbeat
 
 import (
 	"encoding/json"
+	"strconv"
 	"strings"
 	"time"
 
@@ -55,7 +56,7 @@ func posthb(msgid int, service string, conn *nats.Conn) {
 	subject := strings.Join([]string{
 		messages.HeartbeatSubjectDomain,
 		service,
-		string(1),
+		strconv.Itoa(msgid),
 	}, ".")
 
 	message := &messages.Heartbeat{
