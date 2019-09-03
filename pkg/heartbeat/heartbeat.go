@@ -7,6 +7,8 @@ import (
 
 	nats "github.com/nats-io/nats.go"
 	"github.com/ndane/domainstatus/pkg/messages"
+	"github.com/shirou/gopsutil/load"
+	"github.com/shirou/gopsutil/mem"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -40,6 +42,15 @@ func Stop() {
 }
 
 func posthb(counter *int, service string, conn *nats.Conn) {
+	vmem, err := mem.VirtualMemory()
+	if err != nil {
+		log.WithError(err).Panic()
+	}
+	avg, err := load.Avg()
+	if err != nil {
+		log.WithError(err).Panic()
+	}
+
 	*counter = *counter + 1
 	subject := strings.Join([]string{
 		messages.HeartbeatSubjectDomain,
@@ -48,8 +59,13 @@ func posthb(counter *int, service string, conn *nats.Conn) {
 	}, ".")
 
 	message := &messages.Heartbeat{
-		Address:     "localhost:8080",
-		ServiceType: service,
+		Address:              "localhost:8080",
+		ServiceType:          service,
+		Load1:                avg.Load1,
+		Load5:                avg.Load5,
+		Load15:               avg.Load15,
+		MemoryUsedPercentage: vmem.UsedPercent,
+		MemoryTotal:          vmem.Total,
 	}
 
 	payload, err := json.Marshal(&message)
