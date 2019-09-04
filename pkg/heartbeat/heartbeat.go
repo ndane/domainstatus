@@ -67,6 +67,7 @@ func posthb(msgid int, service string, conn *nats.Conn) {
 
 	message := &messages.Heartbeat{
 		Address:              "localhost:8080",
+		ClientID:             clientID,
 		ServiceType:          service,
 		Load1:                avg.Load1,
 		Load5:                avg.Load5,
