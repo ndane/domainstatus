@@ -19,7 +19,8 @@ var stop chan bool
 func ConnectAndStart(serviceName string, servers []string) {
 	connection, err := nats.Connect(strings.Join(servers, ","))
 	if err != nil {
-		log.WithError(err).Panic("Failed to connect to NATS")
+		log.WithError(err).Error("Failed to connect to NATS")
+		return
 	}
 
 	hbCount := 1
