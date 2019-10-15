@@ -48,15 +48,15 @@ func Stop() {
 func posthb(msgid int, service string, conn *nats.Conn) {
 	vmem, err := mem.VirtualMemory()
 	if err != nil {
-		log.WithError(err).Panic()
+		log.WithError(err).Error()
 	}
 	avg, err := load.Avg()
 	if err != nil {
-		log.WithError(err).Panic()
+		log.WithError(err).Error()
 	}
 	clientID, err := conn.GetClientID()
 	if err != nil {
-		log.WithError(err).Panic()
+		log.WithError(err).Error()
 	}
 
 	subject := strings.Join([]string{
@@ -79,7 +79,7 @@ func posthb(msgid int, service string, conn *nats.Conn) {
 
 	payload, err := json.Marshal(&message)
 	if err != nil {
-		log.WithError(err).Panic()
+		log.WithError(err).Error()
 	}
 
 	conn.Publish(subject, payload)
