@@ -7,10 +7,11 @@ import (
 	"time"
 
 	nats "github.com/nats-io/nats.go"
-	"github.com/ndane/domainstatus/pkg/messages"
 	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/ndane/domainstatus/pkg/messages"
 )
 
 var stop chan bool
@@ -47,17 +48,8 @@ func Stop() {
 
 func posthb(msgid int, service string, conn *nats.Conn) {
 	vmem, err := mem.VirtualMemory()
-	if err != nil {
-		log.WithError(err).Error()
-	}
 	avg, err := load.Avg()
-	if err != nil {
-		log.WithError(err).Error()
-	}
 	clientID, err := conn.GetClientID()
-	if err != nil {
-		log.WithError(err).Error()
-	}
 
 	subject := strings.Join([]string{
 		messages.HeartbeatSubjectDomain,
